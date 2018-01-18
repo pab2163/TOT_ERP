@@ -22,11 +22,9 @@ library(tidyverse)
 library(readr)
 library("car")
 
-
-# Load the Checked Data File ----------------------------------------------
-
-#Get the cleaned file (a human cleaned as)
-load('../data/totBehavMasterCleaned.rda')
+# Use data from package
+library(totERP)
+str(totBehavMasterCleaned)
 ```
 
 Exclude subjects with <5 usable ERP Trials (this criterion came from checking ERP data) for both TOT and no-TOT conditions
@@ -35,7 +33,7 @@ Exclude subjects with <5 usable ERP Trials (this criterion came from checking ER
 totBehavMasterCleaned <- subset(totBehavMasterCleaned, id !=2)
 totBehavMasterCleaned <- subset(totBehavMasterCleaned, id !=5)
 totBehavMasterCleaned <- subset(totBehavMasterCleaned, id !=19)
-View(totBehavMasterCleaned)
+head(totBehavMasterCleaned)
 ```
 
 # Clean master of experimenter mistakes and code for descriptives
@@ -99,12 +97,17 @@ totBehavMasterCleaned$tot <- as.factor(totBehavMasterCleaned$tot)
 e <- totBehavMasterCleaned %>% 
   group_by(id, tot) %>%
   summarise(n = n(), recallnum = sum(acc), prob = recallnum/n)
-View(e)
+head(e)
 
 
 
-group_TOT_Plot <- ggplot(e, aes(x = tot, y = prob)) + stat_summary(fun.data = mean_cl_boot) + geom_jitter(size = .5, width = .02, col = 'blue')
-group_TOT_Plot + labs(x = "TOT State - points are individual subject probabilities", y = "P(Recall)", title = "Recall Probability by TOT")
+group_TOT_Plot <- ggplot(e, aes(x = tot, y = prob)) + 
+  stat_summary(fun.data = mean_cl_boot) + 
+  geom_jitter(size = .5, width = .02, col = 'blue')
+group_TOT_Plot + 
+  labs(x = "TOT State - points are individual subject probabilities", 
+       y = "P(Recall)", 
+       title = "Recall Probability by TOT")
 
 # T Test
 t.test(e$prob ~ e$tot, paired = T)
@@ -124,7 +127,7 @@ sd(e$prob[e$tot == "no"]) #.187 sd for don't know recall
 
 # Some descriptives on how many TOTs each subject experienced
 
-View(totsbysubject)
+head(totsbysubject)
 summary(totsbysubject$totnum)
 mean(totsbysubject$totnum)/150 #on average 21% of trials elicited TOTs
 sd((totsbysubject$totnum)/150) #Standard deviation for proportion of trials eliciting TOTs (.085)
@@ -133,7 +136,7 @@ sd((totsbysubject$totnum)/150) #Standard deviation for proportion of trials elic
 totBehavMasterCleanedrecall <- totBehavMasterCleaned %>% 
   group_by(id) %>% summarise(n = n(), recallnum = sum(acc), recallprop = recallnum/n)
 
-View(totBehavMasterCleanedrecall)
+head(totBehavMasterCleanedrecall)
 mean(totBehavMasterCleanedrecall$recallprop) #.59 mean recall rate overall
 sd(totBehavMasterCleanedrecall$recallprop) #.16 sd for recall rate
 
@@ -148,15 +151,15 @@ subject_means_wide <-
          key = tot,
          value = prob,
          sep = "_")
-View(subject_means_wide)
+head(subject_means_wide)
 
 withinSubScatter <- ggplot(subject_means_wide, aes(x = tot_no, y = tot_yes)) +
   geom_point() +
   xlim(0,1) +
   ylim(0,1) +
-  geom_abline() + theme(aspect.ratio=1) + theme_bw() +
+  geom_abline() + 
+  theme_bw() + 
+  theme(aspect.ratio=1) +
   labs(x = 'P(Recall | No-TOT)', y = 'P(Recall | TOT)')
-
-
 withinSubScatter
 ```

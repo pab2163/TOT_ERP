@@ -14,7 +14,7 @@ vignette: >
 The first part of this script just takes the matlab (EEGLAB) output with subject-level averages for tot/no-tot conditions for each electrode 250-700ms and saves it as a .rda object in the data/ folder for analysis. 
 
 ```{r}
-erpSubjectAveraged = read.table("ERPLAB_AverageAmpERP.txt", header = T)
+erpSubjectAveraged <- read.table("data-raw/ERPLAB_AverageAmpERP.txt", header = T)
 devtools::use_data(erpSubjectAveraged)
 ```
 
@@ -35,7 +35,7 @@ require(dplyr)
 
 # FOR AREA AND AMPLITUDES
 #NOTE -- this file was not uploaded because of size! Please email pab2163@columbia.edu if you would like access 
-filename = "../data-raw/singleTrials.txt"
+filename = "data-raw/singleTrials.txt"
 
 d <- read.delim(filename, header = F) %>%
   as_tibble() %>%
@@ -50,7 +50,7 @@ View(d)
 Add channels from text file
 
 ```{r}
-chan <- read.csv("../data-raw/channels.txt", header=T) %>%
+chan <- read.csv("data-raw/channels.txt", header=T) %>%
   as_tibble()
 names(chan)[2] <- "chan"
 
@@ -63,7 +63,7 @@ d <- left_join(d, chan) %>%
 
 Add behavioral data file
 ```{r}
-b <- read.csv("../data-raw/behavioral_data_cleaned.csv", header=T) %>%
+b <- read.csv("data-raw/behavioral_data_cleaned.csv", header=T) %>%
   as_tibble() %>%
   select(-question_num, subj_answer, -question, -correct_answer, -subj_answer, -test_trialnum) %>%
   filter(tot != "N/A") %>%
