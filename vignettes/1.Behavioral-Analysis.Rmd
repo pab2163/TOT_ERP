@@ -33,7 +33,7 @@ Exclude subjects with <5 usable ERP Trials (this criterion came from checking ER
 totBehavMasterCleaned <- subset(totBehavMasterCleaned, id !=2)
 totBehavMasterCleaned <- subset(totBehavMasterCleaned, id !=5)
 totBehavMasterCleaned <- subset(totBehavMasterCleaned, id !=19)
-View(totBehavMasterCleaned)
+head(totBehavMasterCleaned)
 ```
 
 # Clean master of experimenter mistakes and code for descriptives
@@ -97,7 +97,7 @@ totBehavMasterCleaned$tot <- as.factor(totBehavMasterCleaned$tot)
 e <- totBehavMasterCleaned %>% 
   group_by(id, tot) %>%
   summarise(n = n(), recallnum = sum(acc), prob = recallnum/n)
-View(e)
+head(e)
 
 
 
@@ -122,7 +122,7 @@ sd(e$prob[e$tot == "no"]) #.187 sd for don't know recall
 
 # Some descriptives on how many TOTs each subject experienced
 
-View(totsbysubject)
+head(totsbysubject)
 summary(totsbysubject$totnum)
 mean(totsbysubject$totnum)/150 #on average 21% of trials elicited TOTs
 sd((totsbysubject$totnum)/150) #Standard deviation for proportion of trials eliciting TOTs (.085)
@@ -131,7 +131,7 @@ sd((totsbysubject$totnum)/150) #Standard deviation for proportion of trials elic
 totBehavMasterCleanedrecall <- totBehavMasterCleaned %>% 
   group_by(id) %>% summarise(n = n(), recallnum = sum(acc), recallprop = recallnum/n)
 
-View(totBehavMasterCleanedrecall)
+head(totBehavMasterCleanedrecall)
 mean(totBehavMasterCleanedrecall$recallprop) #.59 mean recall rate overall
 sd(totBehavMasterCleanedrecall$recallprop) #.16 sd for recall rate
 
@@ -146,7 +146,7 @@ subject_means_wide <-
          key = tot,
          value = prob,
          sep = "_")
-View(subject_means_wide)
+head(subject_means_wide)
 
 withinSubScatter <- ggplot(subject_means_wide, aes(x = tot_no, y = tot_yes)) +
   geom_point() +
