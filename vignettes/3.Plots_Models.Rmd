@@ -23,6 +23,9 @@ require(ggplot2)
 require(brms)
 ```
 
+NOTE!! The data object for the single-trial ERP data is too large to be uploaded to github so we are working on making it available via OSF. In the meantime, please email pab2163@columbia.edu if you have questions. 
+
+
 Average Across Epochs (Within Subject) to get subject-level means 
 ```{r}
 ab_clip <- long_clip %>%
