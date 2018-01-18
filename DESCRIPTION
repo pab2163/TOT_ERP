@@ -1,0 +1,15 @@
+Package: totERP 
+Type: Package
+Title: totERP Data Package
+Version: 0.1.0
+Authors@R: person(“Paul”, “Bloom”, email = “pab2163@columbia.edu”,
+                  role = c("aut", "cre"))
+Maintainer: Paul Bloom <pab2163@columbia.edu>
+Description: This is a data package with data from a TOT ERP study enclosed
+License: MIT + file LICENSE
+Depends: R (>= 3.1.0)
+Encoding: UTF-8
+LazyData: true
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

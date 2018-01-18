@@ -1,0 +1,21 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# totERP
+
+This package is an R data package for a TOT ERP study. Enclosed are the raw data, processing and analysis scripts (in the form of vignettes), processed data, and figures. 
+
+
