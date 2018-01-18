@@ -101,8 +101,13 @@ head(e)
 
 
 
-group_TOT_Plot <- ggplot(e, aes(x = tot, y = prob)) + stat_summary(fun.data = mean_cl_boot) + geom_jitter(size = .5, width = .02, col = 'blue')
-group_TOT_Plot + labs(x = "TOT State - points are individual subject probabilities", y = "P(Recall)", title = "Recall Probability by TOT")
+group_TOT_Plot <- ggplot(e, aes(x = tot, y = prob)) + 
+  stat_summary(fun.data = mean_cl_boot) + 
+  geom_jitter(size = .5, width = .02, col = 'blue')
+group_TOT_Plot + 
+  labs(x = "TOT State - points are individual subject probabilities", 
+       y = "P(Recall)", 
+       title = "Recall Probability by TOT")
 
 # T Test
 t.test(e$prob ~ e$tot, paired = T)
@@ -152,9 +157,9 @@ withinSubScatter <- ggplot(subject_means_wide, aes(x = tot_no, y = tot_yes)) +
   geom_point() +
   xlim(0,1) +
   ylim(0,1) +
-  geom_abline() + theme(aspect.ratio=1) + theme_bw() +
+  geom_abline() + 
+  theme_bw() + 
+  theme(aspect.ratio=1) +
   labs(x = 'P(Recall | No-TOT)', y = 'P(Recall | TOT)')
-
-
 withinSubScatter
 ```
