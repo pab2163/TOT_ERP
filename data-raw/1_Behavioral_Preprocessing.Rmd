@@ -24,7 +24,7 @@ library("car")
 
 # Import Participant Files ------------------------------------
 
-path = ("../data-raw/behavioral/")
+path = "data-raw/behavioral/"
 file.names <- dir(path, pattern =".csv")
 file.names
 master <- data.frame()
@@ -63,7 +63,7 @@ for(i in 1:length(master$recall)){
 }
 
 # Save raw behavioral master file
-save(master, file = "../data-raw/behavioral_data_raw.rda")
+save(master, file = "data-raw/behavioral_data_raw.rda")
 
 ```
 
@@ -71,7 +71,7 @@ In between here, manual data cleaning and entry of trials in which the experimen
 
 Now, read in cleaned master, and put it in data folder for use in the package
 ```{r}
-totBehavMasterCleaned <- read.csv('behavioral_data_cleaned.csv', stringsAsFactors = F)
+totBehavMasterCleaned <- read.csv('data-raw/behavioral_data_cleaned.csv', stringsAsFactors = F)
 devtools::use_data(totBehavMasterCleaned, compress = 'xz')
 ```
 
