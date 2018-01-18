@@ -16,11 +16,9 @@ This script makes ERP waveform plots and also contains models for the single-tri
 
 Load packages and data
 ```{r}
-require(lme4)
 require(tidyverse)
 require(grid)
 require(gridExtra)
-require(dplyr)
 require(ggplot2)
 require(brms)
 ```
