@@ -1,0 +1,109 @@
+---
+title: "Group-Level Grand Mean ERP Analysis"
+author: "Paul A. Bloom"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# ERP Analysis Script
+
+This script takes in the data output from ERPLAB (http://www.erpinfo.org/erplab.html) in which preprocessing has already been done, and average amplitudes 250-700ms for each electrode for each condition have been calculated by subject.  
+
+
+```{r, fig.height= 5, fig.width=5}
+require(tidyverse)
+require(afex)
+require(ggplot2)
+
+```
+
+
+Load Data In / Recode
+```{r}
+
+#Load the Data from Txt File
+load('../data/erpSubjectAveraged.rda')
+View(erpSubjectAveraged)
+
+
+erpSubjectAveraged$tot <- dplyr::recode(erpSubjectAveraged$bini, '1' ='TOT', '2' ='NO TOT')
+View(erpSubjectAveraged)
+
+# value - Averaged Amplitude 250-700ms post-onset. Grouped by subject, electrode, tot from ERPlab
+# chindex - number for each electrode
+# chlabel - label for each electrode
+# bini - bins for TOT. 1 = tot, 2 = no tot
+# ERPset - subject id #. Each subject is one ERPset
+
+
+
+# Specify Which Electrodes -----------------------------------------------
+target9 <- c("Cz", "C1", "C2", "CPz", "CP1", "CP2", "Pz", "P1", "P2")
+target12 <- c("Cz", "C1", "C2", "C4", "CPz", "CP1", "CP2", "CP4", "Pz", "P1", "P2", "P4")
+erpSubjectAveraged_middle9 <- filter(erpSubjectAveraged, chlabel %in% target9) 
+erpSubjectAveraged_12 <- filter(erpSubjectAveraged, chlabel %in% target12) 
+
+
+```
+
+
+# ANOVAS 
+
+On 9 middle electrodes and as a check, those 9 plus 3 more to the right (12)
+```{r}
+# Anova for middle 9 electrodes
+
+erpSubjectAveraged_middle9$bini <- as.factor(erpSubjectAveraged_middle9$bini)
+erpSubjectAveraged_middle9$chlabel <- as.factor(erpSubjectAveraged_middle9$chlabel)
+erpSubjectAveraged_middle9$ERPset <- as.factor(erpSubjectAveraged_middle9$ERPset)
+
+
+fit9middle <- aov_4(value ~ bini * chlabel + (bini*chlabel | ERPset), data=erpSubjectAveraged_middle9)
+summary(fit9middle)
+
+anova(fit9middle, correction = "GG")
+
+# Anova for middle 9 electrodes + 3 more on the right
+
+
+erpSubjectAveraged_12$bini <- as.factor(erpSubjectAveraged_12$bini)
+erpSubjectAveraged_12$chlabel <- as.factor(erpSubjectAveraged_12$chlabel)
+erpSubjectAveraged_12$ERPset <- as.factor(erpSubjectAveraged_12$ERPset)
+
+
+fit12 <- aov_4(value ~ bini * chlabel + (bini*chlabel | ERPset), data=erpSubjectAveraged_12)
+summary(fit12)
+
+anova(fit12, correction = "GG")
+
+
+#Same main effect for TOT when analyzing with 12 electrodes. With 12 though, TOT and electrode interact significantly
+
+```
+
+A few quick plots
+
+```{r}
+
+# Plot of average amp for 9 electrodes
+myPlot9 <- ggplot(erpSubjectAveraged_middle9, aes(x = tot, y = value)) + stat_summary(fun.data = mean_cl_boot) + facet_wrap("chlabel")
+myPlot9
+
+# Plot of average amp for 12 electrodes
+myPlot12 <- ggplot(erpSubjectAveraged_12, aes(x = tot, y = value)) + stat_summary(fun.data = mean_cl_boot) + facet_wrap("chlabel")
+myPlot12
+
+
+# Plot averaged effect for individual subjects (average of 9 electrodes)
+myPlot9_bySUB <- ggplot(erpSubjectAveraged_middle9, aes(x = tot, y = value, col = tot)) + 
+  stat_summary(fun.data = mean_cl_boot) + 
+  facet_wrap("ERPset")
+
+myPlot9_bySUB + labs(title = "effect of tot for each subject, averaged across 9 electrodes", y = 'amplitude')
+```
+
+

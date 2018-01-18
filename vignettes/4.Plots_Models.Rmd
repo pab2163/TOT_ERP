@@ -1,0 +1,263 @@
+---
+title: "Plots and Single-Trial Logistic Regression Modeling"
+author: "Matti Vuorre & Paul A. Bloom"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This script makes ERP waveform plots and also contains models for the single-trial data. The models predict recall probability as a function of TOT state and ERP amplitude
+
+
+
+Load packages and data
+```{r}
+require(lme4)
+require(tidyverse)
+require(grid)
+require(gridExtra)
+require(dplyr)
+require(ggplot2)
+
+save(long_clip, file = '../data/long_clip.rda', compress = 'xz')
+```
+
+
+```{r}
+
+# Average Across Epochs (Within Subject) to get subject-level mean waveforms----------------------------------
+ab_clip <- long_clip %>%  #long is date frame in long form, with one row per trial per electrode per timestamp
+  group_by(timestamp, id, chlabel, recall, tot) %>%
+  summarise(value = mean(uv))
+
+View(ab_clip)
+
+
+# Plotting (May be a bit slow) --------------------------------------------
+
+#Reorder the levels for tot and electrode so plots will look nicer
+ab_clip$tot <- ordered(ab_clip$tot, levels = c("yes", "no"))
+ab_clip$chlabel <- ordered(ab_clip$chlabel, levels = c("AF3" , "AF4" , "AF7" , "AF8" , "AFz" , 
+                                                       "C1" ,  "Cz" , "C2"  , "C3"  , "C4" ,  "C5"  , "C6" ,
+                                                       "CP1", "CPz" , "CP2" ,"CP3" , "CP4","CP5" , "CP6",  
+                                                       "F1",   "F2" ,  "F3",   "F4",   "F5" ,  "F6"  , "F7",  
+                                                       "F8",   "FC1" , "FC2" , "FC3", 
+                                                       "FC4" , "FC5" , "FC6" , "FCz" , "FP1" , "FP2" ,
+                                                       "FPz" , "FT7" , "FT8" , "Fz"  , "HEOG" ,"LM"  ,
+                                                       "NAZ" , "O1"  , "O2",  "Oz" ,  "P1" , "Pz" ,"P2" , 
+                                                       "P3"  , "P4"  , "P5"  , "P6"  , "P7" ,  "P8"  , "PO3",
+                                                       "PO4" , "PO7" , "PO8"  ,"POZ",  "RM" ,  "TP7"  ,"TP8" , "VEOG"))
+
+myPallette3 <- c("#ff0000", "#000000") #some good colors for plotting just 2 lines
+myPallette4 <- c("#000000","#ff0000") #some good colors for plotting just 2 lines
+```
+
+
+
+# Plot Waveform as Function of TOT 
+```{r}
+#Plot using red/black
+totplot_red <- ab_clip %>%
+  filter(chlabel == "C1" | chlabel == "Cz" | chlabel == "C2" |  chlabel == "CP1" | chlabel == "CPz" |
+           chlabel == "CP2" |  chlabel == "P1" | chlabel == "Pz" | chlabel == "P2" ) %>% 
+  ggplot(aes(timestamp, value, col = tot)) +
+  scale_colour_manual(values=myPallette3, name = "", label = c("TOT", "NO TOT")) + 
+  stat_summary(geom = "line")  +
+  scale_fill_manual(values=myPallette3, guide = F) +
+  stat_summary(fun.data = mean_cl_normal, geom = "ribbon", col = NA, aes(fill = tot), alpha = .2) +
+  facet_wrap("chlabel") + scale_fill_manual(values=myPallette3, guide = F) + labs(x = "Time After Feedback Onset (ms)", y = "Amplitude (µV)") +
+  theme_bw() + theme(axis.line = element_line(colour = "black")) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
+  geom_vline(xintercept = 0, lty = 1, color = 'gray53') + 
+  geom_hline(yintercept = 0, lty = 1, color = 'gray53')
+
+totplot_red <- totplot_red + scale_colour_manual(values=myPallette4, name = "", label = c("yes" = "TOT", "no" = "NO TOT")) +
+  scale_fill_manual(values=myPallette4, guide = F) + facet_wrap("chlabel", scales = "free_x" )
+
+totplot_red
+
+
+```
+
+
+# Plot Waveform as a ‘Function’ of Subsequent Recall ----------------------
+```{r}
+#red dm plot
+dmplot_red <- ab_clip %>%
+  filter(chlabel == "C1" | chlabel == "Cz" | chlabel == "C2" |  chlabel == "CP1" | chlabel == "CPz" |
+           chlabel == "CP2" |  chlabel == "P1" | chlabel == "Pz" | chlabel == "P2" ) %>% 
+  ggplot(aes(timestamp, value, col = as.factor(recall))) +
+  scale_colour_manual(values=myPallette3, name = "", label = c("Not Recalled", "Recalled")) + 
+  stat_summary(geom = "line")  +
+  scale_fill_manual(values=myPallette3, guide = F) +
+  stat_summary(fun.data = mean_cl_normal, geom = "ribbon", col = NA, aes(fill = as.factor(recall)), alpha = .2) +
+  facet_wrap("chlabel") + scale_fill_manual(values=myPallette3, guide = F) + labs(x = "Time After Feedback Onset (ms)", y = "Amplitude (µV)") +
+  theme_bw() + theme(axis.line = element_line(colour = "black")) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
+  geom_vline(xintercept = 0, lty = 1, color = 'gray53') + 
+  geom_hline(yintercept = 0, lty = 1, color = 'gray53')
+
+dmplot_red <- dmplot_red + scale_colour_manual(values=myPallette3, name = "", label = c("Not Recalled", "Recalled")) +
+  scale_fill_manual(values=myPallette3, guide = F) + facet_wrap("chlabel", scales = "free_x" )
+
+```
+
+
+# Plot The “Interaction” of TOT and Recall on Waveform --------------------
+```{r}
+#plots 4 waveforms, 'interaction' between tot * recall 
+plot_interact <- ab_clip %>%
+  filter(chlabel == "C1" | chlabel == "C2" | chlabel == "Cz" | chlabel == "CP1" | chlabel == "CP2"
+         | chlabel == "CPz" | chlabel == "P1" | chlabel == "P2" | chlabel == "Pz") %>%
+  ggplot(aes(timestamp, value, col = interaction(tot, as.factor(recall)), linetype = as.factor(recall))) +
+  stat_summary(geom = "line") +
+  stat_summary(fun.data = mean_cl_normal, geom = "ribbon", col = NA, aes(fill = interaction(tot, as.factor(recall))), alpha = .2) +
+  facet_wrap("chlabel") + labs(x = "Time (ms)", y = "Amplitude ( µV)")
+```
+
+Reformatting for models
+
+```{r}
+
+# Get Mean Amplitudes 250-700ms -----------------------------------------
+timerange_clip <- filter(long_clip, timestamp >= 250) #filter only timestamps after 250ms
+
+
+#Get average amplitude from 250ms on
+avAMP_clip <- timerange_clip %>%
+  group_by(id, chlabel, recall, tot, epoch) %>%
+  summarise(value = mean(uv))
+
+
+#filter only the electrodes we want for analysis
+avAMP_pickELEC_clip <- filter(avAMP_clip, chlabel == "C1" | chlabel == "C2" | chlabel == "Cz" | chlabel == "CP1" | chlabel == "CP2" | chlabel == "CPz" | chlabel == "P1" | chlabel == "P2" | chlabel == "Pz")
+
+#average across channels to get 1 measurement per trial
+avAMP_pickELEC_avChan_clip <- avAMP_pickELEC_clip %>%
+  group_by(id, recall, tot, epoch) %>%
+  summarise(value = mean(value))
+
+View(avAMP_pickELEC_avChan_clip)
+
+
+
+```
+
+# Descriptives: How Many TOT/NO TOT trials by subject
+```{r}
+numTrialsFrame <- avAMP_pickELEC_avChan_clip %>% 
+  dplyr::group_by(id, tot) %>%
+  dplyr::summarise(length(tot))
+
+View(numTrialsFrame)
+
+# Mean and SD of # of no-TOT trials by subject
+mean(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'no'])
+sd(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'no'])
+
+# Mean and SD of # of TOT trials by subject
+mean(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'yes'])
+sd(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'yes'])
+
+```
+
+
+
+# Multilevel Model With Level for Participant (2-Level) ---------------------------------------------------------
+
+Eval set to false here because these models take a while to run
+```{r, eval = FALSE}
+require(brms)
+recallfit_2level <- brm(recall ~ tot * value + (tot*value|id),
+         family=bernoulli, data = avAMP_pickELEC_avChan_clip,
+         cores = 4)
+
+#Inspect Model
+summary(recallfit_2level, WAIC = T)
+
+```
+
+# Plotting The 2-Level Model ----------------------------------------------
+```{r}
+#Setting up data from the fitted model to be plotted first
+newx <- expand.grid(tot = c("no", "yes"),
+                    value = seq(-11, 21, by=1))
+
+fits <- fitted(recallfit_2level, newdata = newx,re_formula = NA)
+
+frameGOOD <- cbind(newx, fits)
+newxID <- expand.grid(tot = c("no", "yes"),
+                      id = c(3,4,seq(6,18,by=1), seq(20,30,by=1)),
+                      value = seq(-11, 21, by=1))
+fitsID <-fitted(recallfit_2level, newdata = newxID)
+frameGOODID <- cbind(newxID, fitsID)
+frameGOODID$id <- as.factor(frameGOODID$id)
+frameGOODID$interact <- interaction(frameGOODID$id, frameGOODID$tot)
+
+
+#Plotting of the Fitted Model (2-Level)
+
+p <- ggplot(frameGOOD, aes(x=value, y=Estimate)) 
+
+p_print <- p + 
+  geom_line(data = frameGOODID, aes(y = Estimate, x = value, 
+                                    group = interact, colour = tot, alpha = 0.1), show.legend = F) +
+  geom_ribbon(data=frameGOOD, aes(ymin=frameGOOD$`2.5%ile`, ymax=frameGOOD$`97.5%ile`, 
+                                  fill=tot), alpha=0.25)+ 
+  geom_line(data=frameGOOD, aes(y=Estimate, colour=tot), size =2, show.legend = F) + 
+  labs(x="Single-Trial Mean Amplitude (µV)", y="P(Recall)") + theme_bw() +
+  ylim(0,1) + xlim(-26, 34) + scale_x_continuous(breaks = seq(-20, 30,by=10)) +
+  theme(panel.grid.minor = element_blank()) + coord_cartesian(expand = c(0, 0)) +
+  scale_fill_manual(values=c("#000000","#31C6FF"), name="", labels=c("NO TOT", "TOT")) +
+  scale_color_manual(values=c("#000000","#31C6FF")) 
+
+p4 <- p_print + scale_fill_manual(values=c("red","black"), name = "", labels = c("NO TOT", "TOT")) +
+  scale_color_manual(values=c("red","black"))
+
+p4
+
+```
+
+Multilevel Model with Levels for Participant & Electrode (3-Level) ----------------
+
+```{r, eval = FALSE}
+#Set a prior, might help the model a little bit?
+prior <- get_prior(recall ~ tot * value + (tot*value|chlabel) + (tot*value|id),
+                   family=bernoulli, data = avAMP_pickELEC_clip)
+
+prior$prior[1] <- "normal(0,2)"
+View(prior)
+
+# 3 level model, with crossed effects for participants and electrodes
+## ---- WARNING --- this can take several hours to run
+recallfit_3level <- brm(recall ~ tot * value + (tot*value|chlabel) + (tot*value|id),
+                           family=bernoulli, data = avAMP_pickELEC_clip,
+                           cores = 4, prior = prior)
+
+summary(recallfit_3level, WAIC = T, levels = 3)
+
+```
+
+
+# Dm Anova 
+
+```{r}
+require(afex)
+dmFrame <- avAMP_pickELEC_clip %>% 
+  group_by(id, chlabel, recall) %>%
+  summarise(value = mean(value))
+
+View(dmFrame)
+fit <- aov_4(value ~ recall * chlabel + (recall*chlabel | id), data=dmFrame)
+summary(fit)
+
+
+# Use Greenhouse-Geisser Correction for Sphericity in the ANOVA
+anova(fit, correction = "GG")
+
+```
+
+
