@@ -1,0 +1,151 @@
+id,trialnum,question_num,question,tot,rt
+20,1,23,What country gave the world the word 'geyser' for a hot spring?,no,1.3643302067739569
+20,2,54,What is the name of the island on which Napoleon was born?,no,1.8231569517211028
+20,3,64,What kind of poison did Socrates take at his execution?,no,1.7097205945256064
+20,4,18,What is the capital of Delaware?,no,1.5289902327049276
+20,5,140,What country was formerly known as the Belgian Congo?,no,1.5474838286590966
+20,6,72,What colorless gas is essential in the production of fertilizers and light bulbs?,N/A,0
+20,7,11,What is the last name of the Confederate general whose last words were 'Let us cross the river and rest in the shade'?,yes,1.5849151251068179
+20,8,117,What human organ (or organs) does a nephrologist treat?,no,1.3818500337501973
+20,9,60,What is the name of the unit of measure that refers to a six-foot depth of water?,yes,1.4989661636554956
+20,10,45,What is the last name of the actress who received the Best Actress Award for the movie 'Mary Poppins'?,yes,1.48485631749827
+20,11,6,In the bible whose name was changed to Israel?,no,1.3974469281301936
+20,12,29,What is the last name of the man who assassinated President John Kennedy?,yes,1.4683966013280951
+20,13,105,What virus killed two million people in 1967?,yes,1.6875981658331511
+20,14,100,What kind of animal was befriended by the escaped slave Androcles in an Aesop Fable?,no,1.468922797263076
+20,15,119,What is the name of the ship that carried the pilgrims to America in 1620?,N/A,0
+20,16,99,What is the last name of the president who is on the far right when you gaze at Mount Rushmore?,yes,1.57786920912622
+20,17,52,What is the capital of Wyoming?,no,1.5305253187825656
+20,18,4,What was the name of the first Apollo lunar module that landed the first man on the moon?,no,1.978942114655183
+20,19,77,What brand name drug is most often prescribed to treat attention deficit disorder?,N/A,0
+20,20,129,What was Cinderella's coach made from?,N/A,0
+20,21,149,What is the last name of the singer who recorded 'Heartbreak Hotel' and 'All Shook Up'?,N/A,0
+20,22,59,What is the name of a female sheep?,N/A,0
+20,23,143,What is the Taj Majal made of?,yes,1.6046206894243369
+20,24,120,What city was Martin Luther King Jr. assassinated in?,yes,1.641435383139651
+20,25,73,What country has the ancient ruins of Machu Picchu?,yes,1.3461590117758533
+20,26,74,In which sport does a rider on horseback hit a ball with a mallet?,yes,1.5520172306059976
+20,27,82,What is the last name of the Russian novelist Teddy Roosevelt called 'a sexual and moral pervert'?,no,1.3061813181675461
+20,28,53,What is the northernmost country in continental South America?,no,1.5211544940248132
+20,29,66,Over which river is the George Washington Bridge?,N/A,0
+20,30,135,What was the name of the mythological creature with the head of a woman and the body of a lion that killed all those unable to solve its riddle?,yes,1.4050161629866125
+20,31,44,What is the last name of the author of Little Women?,yes,1.69422030214173
+20,32,3,What is the last name of the author who wrote Brothers Karamazov?,no,1.2581359669056837
+20,33,47,In what ancient city were the Hanging Gardens located?,N/A,0
+20,34,35,What is the last name of the artist who is famous for producing images of Campbell's soup cans?,N/A,0
+20,35,7,What is the last name of the man who first studied genetic inheritance in plants?,yes,1.6385753214553915
+20,36,127,What is the name of Socrates' most famous student?,N/A,0
+20,37,55,What is the last name of the scientist who discovered radium?,no,1.5143910309961939
+20,38,51,Who was the first ruler of the Holy Roman Empire?,yes,1.324879280501591
+20,39,40,What's the largest gland in the human body?,yes,1.6002454404806485
+20,40,116,What is the last name of the person who defined 'The Beat Generation'?,N/A,0
+20,41,134,What country's civil war was described as a 'rehearsal for World War II'?,yes,1.4429108613130666
+20,42,81,In what country is the Dalai Lama's palace?,yes,1.4890602010264047
+20,43,46,In what European city is the Parthenon located?,N/A,0
+20,44,123,What is the last name of the man who was president directly after James Madison?,yes,1.496379623008579
+20,45,145,What is the last name of the man who invented dynamite?,no,1.322902550924482
+20,46,14,Who was the title character in 'The Merchant of Venice'?,no,1.237706411396175
+20,47,39,What country's capital is Tripoli?,no,1.565237343949775
+20,48,48,What is the name of the man who assassinated Abraham Lincoln?,N/A,0
+20,49,67,What is the last name of the man who wrote the Star Spangled Banner?,N/A,0
+20,50,2,What is the name of the collar bone?,N/A,0
+20,51,110,What is the capital of Denmark?,no,1.478973499985841
+20,52,49,What is the last name of the criminal known as Scarface?,no,1.4451723093998226
+20,53,75,What is the world's largest snake?,N/A,0
+20,54,57,What is the last name of the man who invented the phonograph?,yes,2.1932651003799037
+20,55,136,According to the FDA what's the only fish that produces real caviar?,no,1.8668114708088979
+20,56,108,Who was The Friendly Ghost?,N/A,0
+20,57,19,What is May's birthstone?,no,1.58658300697698
+20,58,90,What Old Testament patriarch is mentioned in the Bible a record 1005 times?,no,1.3684211031059021
+20,59,139,In which country is Angel Falls located?,no,1.2413455043033537
+20,60,79,What spice do chefs pay the most for?,no,1.3437744165685217
+20,61,122,Which dynasty was in power throughout the 1500's in China?,yes,1.528738154272105
+20,62,26,What was the name of the Union Ironclad ship that fought the Confederate ironclad Merrimack?,yes,1.626259556779587
+20,63,13,What is the name of Batman's butler?,N/A,0
+20,64,109,What is the name of the kind of cat that spoke to Alice in the story Alice's adventures in Wonderland?,N/A,0
+20,65,98,Of which country is Nairobi the capital?,N/A,0
+20,66,34,What is the name of the avenue that immediately follows Atlantic Avenue in the game of Monopoly?,no,1.727140751978368
+20,67,88,What igneous rock makes up the bulk of Devils Tower?,no,1.4712094972992418
+20,68,25,What is the name of the project which developed the atomic bomb during World War II?,N/A,0
+20,69,5,What was the name of the zeppelin that exploded in Lakehurst N.J. in 1937?,yes,1.8712320559770887
+20,70,16,What is the last name of the person who always ended her PBS cooking shows with 'Bon appetit'?,no,1.2254023053228593
+20,71,62,In which city is Michelangelo's statue of David located?,no,1.877694269942367
+20,72,12,What drug was named after the Greek god of dreams?,N/A,0
+20,73,141,What is the name of the captain of the Pequod in the book Moby Dick?,yes,1.6814457970222065
+20,74,30,What is the name of the organ that produces insulin?,yes,2.0257989751517016
+20,75,37,What is the last name of the boy in the book Treasure Island?,no,1.4772900549342012
+20,76,126,What is the last name of the artist who painted Guernica?,yes,1.5966595831769155
+20,77,65,Who was the most famous Greek doctor?,no,1.2307608065120803
+20,78,80,What is the capital of Chile?,no,1.60853765905631
+20,79,148,What country's ships transported four million African slaves to Brazil?,no,0.580457310267775
+20,80,115,Who was the leader of the Argonauts?,no,1.4713596055653397
+20,81,128,What is the name of a dried plum?,yes,1.834446829555418
+20,82,85,What animals travel in pods? ,yes,1.585158021011921
+20,83,112,What is the first book of the Old Testament?,N/A,0
+20,84,43,What is the last name of the second U.S. president?,N/A,0
+20,85,111,What is the name for a medical doctor who specializes in diseases of the skin?,yes,1.538793418185378
+20,86,95,What is the last name of the discoverer of the vaccination for smallpox?,yes,1.7117472716390694
+20,87,146,What country joins Central America to South America?,N/A,0
+20,88,94,What were raced in Greek and Roman hippodromes? ,no,1.3523125534647988
+20,89,89,What is the last name of the renowned English author who had been a Polish sailor?,no,1.4582511060471006
+20,90,61,What is the last name of the author of the James Bond novels?,yes,1.520955982009582
+20,91,28,What is the last name of the author of the book 1984?,N/A,0
+20,92,142,Which big cat usually carries its dead prey up into a tree to eat it?,no,1.4056850740489608
+20,93,24,What is the capital of Jamaica?,no,1.3763108192097206
+20,94,76,What is the last name of the man who rode horseback in 1775 to warn that the British were coming?,N/A,0
+20,95,0,What is the name of the river that runs through Rome?,yes,1.5213006776621114
+20,96,124,What major city is on an island in the St. Lawrence River?,yes,1.600504300549801
+20,97,8,What is the unit of electrical power that refers to the current of one ampere at one volt?,yes,1.6885751126092146
+20,98,114,What company invented the microprocessor in 1971?,N/A,0
+20,99,137,What liquor packs the punch in an Aztec Punch?,no,1.3884844802587395
+20,100,38,What is the last name of the author who wrote Brave New World?,no,1.4662222769866275
+20,101,31,What was the capital of Czechoslovakia?,no,1.3565658331772283
+20,102,20,What is the capital of Kentucky?,no,1.4650716841979374
+20,103,32,What is the capital of Bulgaria?,no,1.449870044508316
+20,104,10,What is the last name of the man who wrote Canterbury Tales?,yes,2.0116728791299465
+20,105,50,The general named Hannibal was from what city?,yes,1.663591604737121
+20,106,1,What is the name of the palace in London in which the monarch of England resides?,N/A,0
+20,107,144,What is the last name of the composer who wrote the opera 'Don Giovanni'?,no,1.8582098230990596
+20,108,17,What is the last name of the author who wrote Oliver Twist?,no,0.8043328215226211
+20,109,96,What is the last name of the person who has graced the most Sports Illustrated covers?,yes,1.540304405140887
+20,110,41,What is the name of the furry animal that attacks cobra snakes?,no,1.521311900195542
+20,111,107,What is the last name of the first person to set foot on the moon?,N/A,0
+20,112,131,What staple crop does half the world's population depend on?,N/A,0
+20,113,68,What Peanuts character clings to a security blanket?,yes,1.838950122634742
+20,114,121,What is the name for the astronomical bodies that enter the earth's atmosphere?,yes,1.5538999996661005
+20,115,86,What nuts are used in marzipan? ,yes,1.529617456492815
+20,116,42,In addition to the Kentucky Derby and the Belmont Stakes what horse race comprises the Triple Crown?,no,1.418312448206052
+20,117,118,What is the last name of the man who began the Protestant reformation in Germany?,yes,1.381534484601616
+20,118,83,What is the name of the mountain range that separates Asia from Europe?,yes,1.7294503331513624
+20,119,22,Of which country is Budapest the capital?,yes,1.6050340685815172
+20,120,130,What's the 'Q' short for in Q-Tips?,no,1.403996275863392
+20,121,97,Brown vs. Board of Education the landmark civil-rights case originated in what state?,yes,1.96428729148829
+20,122,133,What nation signed away a fourth of its European land in a 1918 Treaty?,yes,1.7433802879731957
+20,123,15,What is the last name of the male star of the movie Casablanca?,no,1.6172513566616544
+20,124,91,What is the last name of the man who supposedly killed Jesse James?,no,1.496734082616058
+20,125,92,What is the last name of the man who showed that lightning is electricity?,no,0.644558371538551
+20,126,113,What is the last name of the villainous captain in the story Peter Pan?,N/A,0
+20,127,69,What is the highest mountain in the U.S.?,no,1.3828949873686724
+20,128,138,What is the largest city in Canada?,N/A,0
+20,129,87,What is the more common name for a mandrill?,yes,1.7003419656221013
+20,130,33,What is the name of the crime in which a person purposely betrays their country?,N/A,0
+20,131,70,What is the name of the mansion in Virginia that was Thomas Jefferson's home?,no,1.4241818177260939
+20,132,104,What is the name of the process by which plants make their food?,N/A,0
+20,133,106,What is the longest river in South America?,no,0.9710448065925448
+20,134,36,What sitcom received a record 117 Emmy nominations?,no,1.9307791047367573
+20,135,21,What is the last name of the first U.S. President to die in office?,yes,1.4358598478265776
+20,136,132,What was the last name of the woman who designed and sewed the first American flag?,yes,1.4347148387378184
+20,137,63,What is the last name of the author who wrote 'The Old Man and the Sea'?,N/A,0
+20,138,71,What is the name of the British admiral who won the Battle of Trafalgar?,yes,1.4327372169727823
+20,139,9,What is the last name of Batman's secret identity in the Batman comics?,N/A,0
+20,140,125,What is the name of the American who starred in the 1936 Olympics?,yes,1.5406042457498188
+20,141,58,What's the northernmost Baltic republic?,no,1.5116867364604332
+20,142,101,In which city is Heathrow Airport located?,N/A,0
+20,143,103,What is the most populous country in Africa?,N/A,0
+20,144,78,What country suffered the slaughter of half a million Tutsis and Hutus in 1994?,N/A,0
+20,145,102,What is the capital of Russia?,no,0.6160243881658971
+20,146,84,What's heaven to fallen Norse warriors?,no,1.333283047743862
+20,147,147,What is the name of the constellation that looks like a flying horse?,no,1.554172914216906
+20,148,56,What is the last name of the commander who lost the battle of the Little Bighorn River?,no,1.389673056231004
+20,149,27,What is the name of the submarine in Jules Vernes's 20000 Leagues under the Sea?,no,1.3794112856876382
+20,150,93,What island is the largest in the world excluding Australia?,yes,1.542743293546664

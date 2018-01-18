@@ -1,0 +1,80 @@
+---
+title: "Combining Subject Data To Master"
+author: "Paul A. Bloom"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This script pulls from all the raw data files to create a master data spreadsheet
+Also, it uses approximate string matching to code correct/incorrect responses in the test phase
+It outputs a csv called "behavioral_data.csv
+
+```{r}
+# Load Packages -----------------------------------------------------------
+
+
+library(ggplot2)
+library(dplyr)
+library(readr)
+library("car")
+
+# Import Participant Files ------------------------------------
+
+path = ("../data-raw/behavioral/")
+file.names <- dir(path, pattern =".csv")
+file.names
+master <- data.frame()
+
+
+# Make the master data frame -- the loop matches up the initial [SUB#].csv file for each subject during the TOT phase 
+# with the test[SUB#].csv file from the test phase, then appends them all into a master file. 
+#Subject 1 was previously excluded -- not included here
+
+for(i in 2:30) {
+  subject_frame <- read.csv(paste(path, file.names[i], sep = ''), stringsAsFactors=FALSE)
+  test_frame <- read.csv(paste(path, file.names[i+30], sep = ''), stringsAsFactors=FALSE, col.names = 
+                           c("test_id", "test_trialnum", "question_num", "test_question", "subj_answer", "correct_answer"))
+  subject_comp <- merge(subject_frame,test_frame,by="question_num")
+  master <- rbind(master, subject_comp)
+}
+
+
+# Approximate String Matching For Typed Responses ---------------------------------------------
+
+# Make a new column called "recall" in the data frame and loop through each trial, coding each as correct or 
+# not correct in the test phase via approx pattern matching
+
+master$recall <- rep(0, length(master$question_num))
+for(i in 1:length(master$recall)){
+  matcher<- agrep(master$correct_answer[i], master$subj_answer[i], ignore.case = T, value = F,
+        max.distance = 0.1)
+  if(length(matcher) != 0)
+  {
+    master$recall[i] <- "C"
+  }
+  else{
+    master$recall[i] <- "I"
+  }
+  
+}
+
+# Save raw behavioral master file
+save(master, file = "../data-raw/behavioral_data_raw.rda")
+
+```
+
+In between here, manual data cleaning and entry of trials in which the experimenter hit the wrong key happens. These trials where the experimenter hit a wrong key are the trials in the 'mistake' column coded as 1
+
+Now, read in cleaned master, and put it in data folder for use in the package
+```{r}
+totBehavMasterCleaned <- read.csv('behavioral_data_cleaned.csv', stringsAsFactors = F)
+devtools::use_data(totBehavMasterCleaned, compress = 'xz')
+```
+
+This behavioral_data.csv file is then checked and recall is corrected by an experimenter blind to the tot coding for each trial
+
+Mostly, responses coded as incorrect because of spelling errors or additional words are recoded as correct by the experimenter

@@ -1,0 +1,5 @@
+inst/doc
+.Rproj.user
+.Rhistory
+.Rapp.history
+data-raw/single_trial_raw_files
