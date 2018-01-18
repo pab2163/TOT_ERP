@@ -22,11 +22,9 @@ library(tidyverse)
 library(readr)
 library("car")
 
-
-# Load the Checked Data File ----------------------------------------------
-
-#Get the cleaned file (a human cleaned as)
-load('../data/totBehavMasterCleaned.rda')
+# Use data from package
+library(totERP)
+str(totBehavMasterCleaned)
 ```
 
 Exclude subjects with <5 usable ERP Trials (this criterion came from checking ERP data) for both TOT and no-TOT conditions
