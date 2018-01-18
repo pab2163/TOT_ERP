@@ -1,25 +1,3 @@
-#' Single-trial TOT ERP Data for Every Timepoint in Long Format.
-#'
-#' @description A data set in long format with timestamp, participant, electrode,
-#' recall, tot, epoch, and EEG amplitude data
-#'
-#' @format A data.frame with 2,916,000 rows and 6 variables:
-#' \describe{
-#'   \item{timestamp}{point in time in relation to feedback onset (negative values are before feedback onset)}
-#'   \item{id}{subject id}
-#'   \item{epoch}{each epoch is one trial during the tot/feedback phase of the experiment}
-#'   \item{chlabel}{abbreviation for electrode}
-#'   \item{recall}{subsequent recall in test phase dummy coded; 1 = correct, 0 = incorrect}
-#'   \item{tot}{tot state or not during tot/feedback phase}
-#'   \item{uv}{electrode amplitude in microvolts (µV) at that timepoint during the trial (baselined in ERPLAB using the 200ms before feedback onset)}
-#'
-#' }
-#' @source \url{https://github.com/pab2163/TOT_ERP}
-#'
-#'
-"long_clip"
-
-
 #' Cleaned TOT Behavioral Data
 #'
 #' @description A data set of the behavioral data, cleaned and for all subjects for the TOT ERP study
