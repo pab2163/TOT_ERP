@@ -8,6 +8,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+# ERP Plotting and Single-Trial Modeling Script
 
 This script makes ERP waveform plots and also contains models for the single-trial data. The models predict recall probability as a function of TOT state and ERP amplitude
 
@@ -21,23 +22,24 @@ require(grid)
 require(gridExtra)
 require(dplyr)
 require(ggplot2)
-
-save(long_clip, file = '../data/long_clip.rda', compress = 'xz')
+require(brms)
 ```
 
-
+Average Across Epochs (Within Subject) to get subject-level means 
 ```{r}
-
-# Average Across Epochs (Within Subject) to get subject-level mean waveforms----------------------------------
-ab_clip <- long_clip %>%  #long is date frame in long form, with one row per trial per electrode per timestamp
+ab_clip <- long_clip %>%
   group_by(timestamp, id, chlabel, recall, tot) %>%
   summarise(value = mean(uv))
 
-View(ab_clip)
+head(ab_clip)
 
+```
 
-# Plotting (May be a bit slow) --------------------------------------------
+# Plotting 
 
+Plots are pulling from large data frames, so they may take a few minutes to load
+
+```{r}
 #Reorder the levels for tot and electrode so plots will look nicer
 ab_clip$tot <- ordered(ab_clip$tot, levels = c("yes", "no"))
 ab_clip$chlabel <- ordered(ab_clip$chlabel, levels = c("AF3" , "AF4" , "AF7" , "AF8" , "AFz" , 
@@ -56,10 +58,8 @@ myPallette4 <- c("#000000","#ff0000") #some good colors for plotting just 2 line
 ```
 
 
-
-# Plot Waveform as Function of TOT 
+Plot Waveform as Function of TOT 
 ```{r}
-#Plot using red/black
 totplot_red <- ab_clip %>%
   filter(chlabel == "C1" | chlabel == "Cz" | chlabel == "C2" |  chlabel == "CP1" | chlabel == "CPz" |
            chlabel == "CP2" |  chlabel == "P1" | chlabel == "Pz" | chlabel == "P2" ) %>% 
@@ -68,14 +68,17 @@ totplot_red <- ab_clip %>%
   stat_summary(geom = "line")  +
   scale_fill_manual(values=myPallette3, guide = F) +
   stat_summary(fun.data = mean_cl_normal, geom = "ribbon", col = NA, aes(fill = tot), alpha = .2) +
-  facet_wrap("chlabel") + scale_fill_manual(values=myPallette3, guide = F) + labs(x = "Time After Feedback Onset (ms)", y = "Amplitude (µV)") +
+  facet_wrap("chlabel") + scale_fill_manual(values=myPallette3, guide = F) + 
+  labs(x = "Time After Feedback Onset (ms)", y = "Amplitude (µV)") +
   theme_bw() + theme(axis.line = element_line(colour = "black")) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
   geom_vline(xintercept = 0, lty = 1, color = 'gray53') + 
   geom_hline(yintercept = 0, lty = 1, color = 'gray53')
 
-totplot_red <- totplot_red + scale_colour_manual(values=myPallette4, name = "", label = c("yes" = "TOT", "no" = "NO TOT")) +
-  scale_fill_manual(values=myPallette4, guide = F) + facet_wrap("chlabel", scales = "free_x" )
+totplot_red <- totplot_red + 
+  scale_colour_manual(values=myPallette4, name = "", label = c("yes" = "TOT", "no" = "NO TOT")) +
+  scale_fill_manual(values=myPallette4, guide = F) + 
+  facet_wrap("chlabel", scales = "free_x" )
 
 totplot_red
 
@@ -83,9 +86,8 @@ totplot_red
 ```
 
 
-# Plot Waveform as a ‘Function’ of Subsequent Recall ----------------------
+Plot Waveform as a ‘Function’ of Subsequent Recall
 ```{r}
-#red dm plot
 dmplot_red <- ab_clip %>%
   filter(chlabel == "C1" | chlabel == "Cz" | chlabel == "C2" |  chlabel == "CP1" | chlabel == "CPz" |
            chlabel == "CP2" |  chlabel == "P1" | chlabel == "Pz" | chlabel == "P2" ) %>% 
@@ -94,32 +96,39 @@ dmplot_red <- ab_clip %>%
   stat_summary(geom = "line")  +
   scale_fill_manual(values=myPallette3, guide = F) +
   stat_summary(fun.data = mean_cl_normal, geom = "ribbon", col = NA, aes(fill = as.factor(recall)), alpha = .2) +
-  facet_wrap("chlabel") + scale_fill_manual(values=myPallette3, guide = F) + labs(x = "Time After Feedback Onset (ms)", y = "Amplitude (µV)") +
+  facet_wrap("chlabel") + scale_fill_manual(values=myPallette3, guide = F) + 
+  labs(x = "Time After Feedback Onset (ms)", y = "Amplitude (µV)") +
   theme_bw() + theme(axis.line = element_line(colour = "black")) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
   geom_vline(xintercept = 0, lty = 1, color = 'gray53') + 
   geom_hline(yintercept = 0, lty = 1, color = 'gray53')
 
-dmplot_red <- dmplot_red + scale_colour_manual(values=myPallette3, name = "", label = c("Not Recalled", "Recalled")) +
-  scale_fill_manual(values=myPallette3, guide = F) + facet_wrap("chlabel", scales = "free_x" )
+dmplot_red <- dmplot_red + 
+  scale_colour_manual(values=myPallette3, name = "", label = c("Not Recalled", "Recalled")) +
+  scale_fill_manual(values=myPallette3, guide = F) + 
+  facet_wrap("chlabel", scales = "free_x" )
 
 ```
 
 
-# Plot The “Interaction” of TOT and Recall on Waveform --------------------
+Plot The “Interaction” of TOT and Recall on Waveform --------------------
 ```{r}
-#plots 4 waveforms, 'interaction' between tot * recall 
 plot_interact <- ab_clip %>%
   filter(chlabel == "C1" | chlabel == "C2" | chlabel == "Cz" | chlabel == "CP1" | chlabel == "CP2"
          | chlabel == "CPz" | chlabel == "P1" | chlabel == "P2" | chlabel == "Pz") %>%
   ggplot(aes(timestamp, value, col = interaction(tot, as.factor(recall)), linetype = as.factor(recall))) +
   stat_summary(geom = "line") +
   stat_summary(fun.data = mean_cl_normal, geom = "ribbon", col = NA, aes(fill = interaction(tot, as.factor(recall))), alpha = .2) +
-  facet_wrap("chlabel") + labs(x = "Time (ms)", y = "Amplitude ( µV)")
+  facet_wrap("chlabel") + 
+  labs(x = "Time (ms)", y = "Amplitude ( µV)")
 ```
 
-Reformatting for models
+# Single-Trial Models Using brms 
 
+brms package used for Bayesian Multilevel Regression Models: https://github.com/paul-buerkner/brms
+
+
+Wrangle data into the right format for modeling
 ```{r}
 
 # Get Mean Amplitudes 250-700ms -----------------------------------------
@@ -140,37 +149,15 @@ avAMP_pickELEC_avChan_clip <- avAMP_pickELEC_clip %>%
   group_by(id, recall, tot, epoch) %>%
   summarise(value = mean(value))
 
-View(avAMP_pickELEC_avChan_clip)
-
-
-
-```
-
-# Descriptives: How Many TOT/NO TOT trials by subject
-```{r}
-numTrialsFrame <- avAMP_pickELEC_avChan_clip %>% 
-  dplyr::group_by(id, tot) %>%
-  dplyr::summarise(length(tot))
-
-View(numTrialsFrame)
-
-# Mean and SD of # of no-TOT trials by subject
-mean(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'no'])
-sd(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'no'])
-
-# Mean and SD of # of TOT trials by subject
-mean(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'yes'])
-sd(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'yes'])
+head(avAMP_pickELEC_avChan_clip)
 
 ```
 
 
-
-# Multilevel Model With Level for Participant (2-Level) ---------------------------------------------------------
+Multilevel Model With Level for Participant (2-Level) 
 
 Eval set to false here because these models take a while to run
 ```{r, eval = FALSE}
-require(brms)
 recallfit_2level <- brm(recall ~ tot * value + (tot*value|id),
          family=bernoulli, data = avAMP_pickELEC_avChan_clip,
          cores = 4)
@@ -180,7 +167,7 @@ summary(recallfit_2level, WAIC = T)
 
 ```
 
-# Plotting The 2-Level Model ----------------------------------------------
+Plotting The 2-Level Model
 ```{r}
 #Setting up data from the fitted model to be plotted first
 newx <- expand.grid(tot = c("no", "yes"),
@@ -221,10 +208,12 @@ p4
 
 ```
 
-Multilevel Model with Levels for Participant & Electrode (3-Level) ----------------
+Multilevel Model with Levels for Participant & Electrode (3-Level)
+
+Warning! This model chews through a ton of data and may take a few hours to run!
 
 ```{r, eval = FALSE}
-#Set a prior, might help the model a little bit?
+#Set a prior
 prior <- get_prior(recall ~ tot * value + (tot*value|chlabel) + (tot*value|id),
                    family=bernoulli, data = avAMP_pickELEC_clip)
 
@@ -232,12 +221,31 @@ prior$prior[1] <- "normal(0,2)"
 View(prior)
 
 # 3 level model, with crossed effects for participants and electrodes
-## ---- WARNING --- this can take several hours to run
 recallfit_3level <- brm(recall ~ tot * value + (tot*value|chlabel) + (tot*value|id),
                            family=bernoulli, data = avAMP_pickELEC_clip,
                            cores = 4, prior = prior)
 
 summary(recallfit_3level, WAIC = T, levels = 3)
+
+# Seems like the predictions made by the 3-level model are very similar to those made by the 2-level one
+
+```
+
+# Descriptives: How Many TOT/NO TOT trials by subject
+```{r}
+numTrialsFrame <- avAMP_pickELEC_avChan_clip %>% 
+  dplyr::group_by(id, tot) %>%
+  dplyr::summarise(length(tot))
+
+View(numTrialsFrame)
+
+# Mean and SD of # of no-TOT trials by subject
+mean(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'no'])
+sd(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'no'])
+
+# Mean and SD of # of TOT trials by subject
+mean(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'yes'])
+sd(numTrialsFrame$`length(tot)`[numTrialsFrame$tot == 'yes'])
 
 ```
 
