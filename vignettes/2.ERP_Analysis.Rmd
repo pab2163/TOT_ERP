@@ -24,26 +24,31 @@ require(ggplot2)
 
 Load Data In / Recode
 ```{r}
-
-#Load the Data from Txt File
-load('../data/erpSubjectAveraged.rda')
-View(erpSubjectAveraged)
+# Use data from package
+library(totERP)
+str(erpSubjectAveraged)
+head(erpSubjectAveraged)
 
 
 erpSubjectAveraged$tot <- dplyr::recode(erpSubjectAveraged$bini, '1' ='TOT', '2' ='NO TOT')
 View(erpSubjectAveraged)
 
-# value - Averaged Amplitude 250-700ms post-onset. Grouped by subject, electrode, tot from ERPlab
-# chindex - number for each electrode
-# chlabel - label for each electrode
-# bini - bins for TOT. 1 = tot, 2 = no tot
-# ERPset - subject id #. Each subject is one ERPset
+```
+
+value - Averaged Amplitude 250-700ms post-onset. Grouped by subject, electrode, tot from ERPlab
+chindex - number for each electrode
+chlabel - label for each electrode
+bini - bins for TOT. 1 = tot, 2 = no tot
+ERPset - subject id #. Each subject is one ERPset
 
 
 
-# Specify Which Electrodes -----------------------------------------------
+# Specify Which Electrodes 
+```{r}
 target9 <- c("Cz", "C1", "C2", "CPz", "CP1", "CP2", "Pz", "P1", "P2")
 target12 <- c("Cz", "C1", "C2", "C4", "CPz", "CP1", "CP2", "CP4", "Pz", "P1", "P2", "P4")
+
+# Specify data frames for 9 centro-parietal electrodes, and 12 centro-parietal electrodes including 3 more to the right hemisphere (respectively)
 erpSubjectAveraged_middle9 <- filter(erpSubjectAveraged, chlabel %in% target9) 
 erpSubjectAveraged_12 <- filter(erpSubjectAveraged, chlabel %in% target12) 
 
@@ -90,11 +95,15 @@ A few quick plots
 ```{r}
 
 # Plot of average amp for 9 electrodes
-myPlot9 <- ggplot(erpSubjectAveraged_middle9, aes(x = tot, y = value)) + stat_summary(fun.data = mean_cl_boot) + facet_wrap("chlabel")
+myPlot9 <- ggplot(erpSubjectAveraged_middle9, aes(x = tot, y = value)) +
+  stat_summary(fun.data = mean_cl_boot) + 
+  facet_wrap("chlabel")
 myPlot9
 
 # Plot of average amp for 12 electrodes
-myPlot12 <- ggplot(erpSubjectAveraged_12, aes(x = tot, y = value)) + stat_summary(fun.data = mean_cl_boot) + facet_wrap("chlabel")
+myPlot12 <- ggplot(erpSubjectAveraged_12, aes(x = tot, y = value)) + 
+  stat_summary(fun.data = mean_cl_boot) + 
+  facet_wrap("chlabel")
 myPlot12
 
 
@@ -103,7 +112,8 @@ myPlot9_bySUB <- ggplot(erpSubjectAveraged_middle9, aes(x = tot, y = value, col 
   stat_summary(fun.data = mean_cl_boot) + 
   facet_wrap("ERPset")
 
-myPlot9_bySUB + labs(title = "effect of tot for each subject, averaged across 9 electrodes", y = 'amplitude')
+myPlot9_bySUB + 
+  labs(title = "effect of tot for each subject, averaged across 9 electrodes", y = 'amplitude')
 ```
 
 
