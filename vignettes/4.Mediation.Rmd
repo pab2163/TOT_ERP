@@ -12,6 +12,7 @@ vignette: >
 # Mediation Analysis
 
 Using Bayesian Multilevel Mediation
+
 R Package by Matti Vuorre: https://github.com/mvuorre/bmlm
 
 Assumed causal structure: tot states --> recall probability, mediated by ERP data
