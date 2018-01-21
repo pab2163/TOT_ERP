@@ -9,7 +9,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Using Bayesian Multilevel Mediation (R Package by Matti Vuorre) to do a mediation analysis
+# Mediation Analysis
+
+Using Bayesian Multilevel Mediation (R Package by Matti Vuorre: https://github.com/mvuorre/bmlm to do a mediation analysis
+
 Assumed causal structure: tot states --> recall probability, mediated by ERP data
 
 
@@ -33,7 +36,7 @@ Reformatting for models
 
 ```{r, eval = FALSE}
 
-# Get Mean Amplitudes 250-700ms -----------------------------------------
+# Get Mean Amplitudes 250-700ms
 timerange_clip <- filter(long_clip, timestamp >= 250) #filter only timestamps after 250ms
 
 
@@ -56,17 +59,17 @@ avAMP_pickELEC_avChan_clip <- avAMP_pickELEC_clip %>%
 
 Recode / get data formatted to run bmlm models
 ```{r}
-# Dummy Code TOTs ---------------------------------------------------------
+# Dummy Code TOTs 
 avAMP_pickELEC_avChan_clip$tot<- revalue(avAMP_pickELEC_avChan_clip$tot, c("yes"="1", "no"="0"))
-View(avAMP_pickELEC_avChan_clip)
+head(avAMP_pickELEC_avChan_clip)
 
 
-# Subject Center Variables ------------------------------------------------
+# Subject Center Variables 
 iso <- isolate(d = avAMP_pickELEC_avChan_clip, by = "id",
                     value = "value")
 
 
-# Necessary for Model to Work for Some Reason -----------------------------
+# Necessary for Model to Work for Some Reason 
 #write.csv(iso, file = "../data/singleTrialSubjectCentered.csv")
 #iso <- read.csv("../data/singleTrialSubjectCentered.csv")
 
@@ -93,10 +96,11 @@ mcmc_trace(as.data.frame(iso_fit), pars = pars)
 #Inspect Model
 
 a2 <- mlm_summary(iso_fit)
-View(a2)
+head(a2)
 
 
 ```
+
 # Plots 
 ```{r}
 mediation_chart <-  mlm_path_plot(iso_fit, level = .95, text = T,
@@ -129,7 +133,7 @@ d <- select(d, id, epoch, tot, recall, value, value_cw) %>%
   arrange(id, trial) %>% 
   mutate(id = as.integer(as.factor(id)))
 
-View(d)
+head(d)
 
 # Some data figures
 g1 <- d %>% 
