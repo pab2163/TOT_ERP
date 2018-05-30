@@ -156,6 +156,7 @@ subject_means_wide <-
          sep = "_")
 head(subject_means_wide)
 
+
 withinSubScatter <- ggplot(subject_means_wide, aes(x = tot_no, y = tot_yes)) +
   geom_point() +
   xlim(0,1) +
@@ -166,3 +167,73 @@ withinSubScatter <- ggplot(subject_means_wide, aes(x = tot_no, y = tot_yes)) +
   labs(x = 'P(Recall | No-TOT)', y = 'P(Recall | TOT)')
 withinSubScatter
 ```
+
+# Within Subjects-Scatter With Bootstrapped Confidence Intervals
+
+A quick function to get the standard error of a proportion
+```{r}
+
+se_proportion <- function(p, n){
+  se <- sqrt(p*(1-p)/n)
+  return(se)
+}
+```
+
+Get SE for each subject/condition
+```{r}
+e$se <- se_proportion(e$prob, e$n)
+e$lower <- e$prob - 2*e$se
+e$upper <- e$prob + 2*e$se
+
+```
+
+
+
+# Add total n and standard error to subject_means_wide data frame
+
+```{r}
+se_wide <-
+  spread((select(e, id, tot, se)),
+         key = tot,
+         value = se,
+         sep = "_se_")
+head(se_wide)
+
+n_wide <-
+  spread((select(e, id, tot, n)),
+         key = tot,
+         value = n,
+         sep = "_n_")
+head(n_wide)
+
+
+
+# Join with standard errors and n
+subject_means_wide <- dplyr::left_join(subject_means_wide, se_wide)
+subject_means_wide <- dplyr::left_join(subject_means_wide, n_wide)
+
+```
+Re-plot
+```{r}
+withinSubScatterConf <- ggplot(subject_means_wide, aes(x = tot_no, y = tot_yes)) +
+  geom_point(color = 'red') +
+  xlim(0,1) +
+  ylim(0,1) +
+  geom_abline() + 
+  theme_bw() + 
+  theme(aspect.ratio=1) +
+  labs(x = 'P(Recall | No-TOT)', y = 'P(Recall | TOT)') +
+  geom_errorbar(aes(ymin=(tot_yes - 2*tot_se_yes), ymax = (tot_yes + 2*tot_se_yes)), alpha = .3) +
+  geom_errorbarh(aes(xmin=(tot_no - 2*tot_se_no), xmax = (tot_no + 2*tot_se_no)), alpha = .3) +
+  geom_errorbar(data = dplyr::filter(subject_means_wide, id ==3 | id == 8 | id == 28), 
+                aes(ymin=(tot_yes - 2*tot_se_yes), ymax = 1), alpha = .3, width = 0) +
+  theme(panel.grid.minor = element_blank()) +
+  theme(panel.grid.major = element_blank())
+
+
+withinSubScatterConf
+```
+
+** Note -- I did manually put in error bars for 3 subjects (3, 8, 28) for which the upper bound of their 95% CI for P(Recall|TOT) > 1. I just capped the these bars at 1 and kept the same lower bound, although the estimated upper bound based on the standard error for each were 1.07, 1.04, and 1.01. Also, one subject (16) got 7/7 TOT questions correct, resulting in a 100% correct rate in this condition. Confidence intervals were not calculated for this condition for this subject. 
+
+

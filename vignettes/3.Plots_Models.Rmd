@@ -124,6 +124,7 @@ dmplot_red <- dmplot_red +
 ```
 
 
+
 Plot The “Interaction” of TOT and Recall on Waveform --------------------
 ```{r}
 plot_interact <- ab_clip %>%
@@ -281,4 +282,71 @@ anova(fit, correction = "GG")
 
 ```
 
+# New Plots/Analysis For Revision
+
+##  ANOVA for TOT
+```{r}
+totFrame <- avAMP_pickELEC_clip %>% 
+  group_by(id, tot, chlabel) %>%
+  summarise(value = mean(value))
+tot_fit <- aov_4(value ~ chlabel * tot + (chlabel*tot| id), data=totFrame)
+anova(tot_fit, correction = 'GG')
+
+```
+
+## TOT ANOVA to see if there are ERP differences in JUST remembered trials
+```{r}
+onlyRecalledFrame <- filter(avAMP_pickELEC_clip, recall ==1) %>% 
+  group_by(id, tot, chlabel) %>%
+  summarise(value = mean(value))
+
+tot_recall_fit <- aov_4(value ~ chlabel * tot + (chlabel*tot| id), data=onlyRecalledFrame)
+
+anova(tot_recall_fit, correction = 'GG')
+
+# how many no-recall trials?
+nrow(filter(avAMP_pickELEC_clip, recall == 0))
+nrow(filter(avAMP_pickELEC_clip, recall == 0, tot == 'yes'))
+nrow(filter(avAMP_pickELEC_clip, recall == 0, tot == 'no'))
+
+
+# how many recall trials?
+nrow(filter(avAMP_pickELEC_clip, recall == 1))
+nrow(filter(avAMP_pickELEC_clip, recall == 1, tot == 'yes'))
+nrow(filter(avAMP_pickELEC_clip, recall == 1, tot == 'no'))
+```
+
+
+## Plot waveform as a function of TOT state for ONLY subsequently remembered trials
+```{r}
+totplot_remembered <- ab_clip %>%
+  filter(recall == 1, 
+         chlabel == "C1" | chlabel == "Cz" | chlabel == "C2" |  chlabel == "CP1" | chlabel == "CPz" |
+           chlabel == "CP2" |  chlabel == "P1" | chlabel == "Pz" | chlabel == "P2" ) %>% 
+  ggplot(aes(timestamp, value, col = tot)) +
+  scale_colour_manual(values=myPallette3, name = "", label = c("TOT", "NO TOT")) + 
+  stat_summary(geom = "line")  +
+  scale_fill_manual(values=myPallette3, guide = F) +
+  stat_summary(fun.data = mean_cl_normal, geom = "ribbon", col = NA, aes(fill = tot), alpha = .2) +
+  facet_wrap("chlabel") + scale_fill_manual(values=myPallette3, guide = F) + 
+  labs(x = "Time After Feedback Onset (ms)", y = "Amplitude (µV)") +
+  theme_bw() + theme(axis.line = element_line(colour = "black")) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
+  geom_vline(xintercept = 0, lty = 1, color = 'gray53') + 
+  geom_hline(yintercept = 0, lty = 1, color = 'gray53')
+
+totplot_remembered <- totplot_remembered + 
+  scale_colour_manual(values=myPallette4, name = "", label = c("yes" = "TOT", "no" = "NO TOT")) +
+  scale_fill_manual(values=myPallette4, guide = F) + 
+  facet_wrap("chlabel", scales = "free_x" )
+
+```
+
+## BRMS Modeling of TOT effect on ERPs for only subsequently remembered trials
+
+```{r, eval = FALSE}
+# value as a function of tot with levels for id and chlabel -- ONLY remembered trials
+totRecallFit <- brm(data = filter(avAMP_pickELEC_clip, recall == 1), value ~ tot + (tot|id) + (tot|chlabel), cores = 4)
+summary(totRecallFit)
+```
 

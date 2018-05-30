@@ -116,4 +116,19 @@ myPlot9_bySUB +
   labs(title = "effect of tot for each subject, averaged across 9 electrodes", y = 'amplitude')
 ```
 
+# ANOVAS just on subsequently recalled items
 
+```{r}
+# Anova for middle 9 electrodes
+
+erpSubjectAveraged_middle9$bini <- as.factor(erpSubjectAveraged_middle9$bini)
+erpSubjectAveraged_middle9$chlabel <- as.factor(erpSubjectAveraged_middle9$chlabel)
+erpSubjectAveraged_middle9$ERPset <- as.factor(erpSubjectAveraged_middle9$ERPset)
+
+
+fit9middle <- erpSubjectAveraged_middle9aov_4 %>%
+  (value ~ bini * chlabel + (bini*chlabel | ERPset))
+summary(fit9middle)
+
+anova(fit9middle, correction = "GG")
+```
