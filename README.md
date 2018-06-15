@@ -2,7 +2,7 @@
 totERP
 ======
 
-This package is an R data package for an ERP study on the tip-of-the-tongue phenomenon (Bloom, Friedman, Xu, Vuorre, & Metcalfe, 2018). 
+This package is an R data package for an ERP study on the tip-of-the-tongue phenomenon (Bloom, Friedman, Xu, Vuorre, & Metcalfe, 2018).
 
 Within this package are the raw behavioral data, processing and analysis scripts (in the form of vignettes), and processed data.
 
@@ -10,4 +10,27 @@ Because of file size limitations, some data objects, namely the single-trial pre
 
 We have also created an interactive ERP visualization/exploration tool for this dataset at <https://pbloom.shinyapps.io/ERPVis/>
 
-In the meantime, please email <pab2163@columbia.edu> if you would like access to any data files in the meantime.
+Please email <pab2163@columbia.edu> if you would like access to any data files in the meantime.
+
+*To install R data package/get started*
+
+Install and load devtools package
+
+``` r
+install.packages("devtools")
+require(devtools)
+```
+
+Intall and load totERP Package
+
+``` r
+devtools::install_github("pab2163/TOT_ERP")` 
+require(totERP)
+```
+
+View the data objects
+
+``` r
+str(erpSubjectAveraged) 
+str(totBehavMasterCleaned)
+```
